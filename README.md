@@ -1,5 +1,7 @@
 # Comfy Modder
 
+Easily replace any string inputs in your ComfyUI workflows
+
 ## Usage
 
 1. Install ComfyUI
@@ -15,7 +17,7 @@
 
 ## Roadmap
 
-- generation feedback (progress bars on runs)
-- bigger value field if its a prompt
-- prompt S/R instead of full replace
-- append / prepend to value instead of full replace
+- [ ] generation feedback (progress bars on runs)
+- [ ] bigger value field if its a prompt
+- [ ] prompt S/R instead of full replace
+- [ ] append / prepend to value instead of full replace
