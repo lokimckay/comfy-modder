@@ -1,0 +1,155 @@
+@font-face {
+  font-family: "Fixel";
+  src: url("/fonts/FixelVariable.ttf") format("truetype");
+}
+
+:root {
+  --darkest: #13151a;
+  --mid: #121c2b;
+  --lighter: #22355d;
+  --lightest: #dcdcdc;
+
+  --accent-purple: #9c69ff;
+  --accent-purple-hover: rgba(156, 105, 255, 0.5);
+  --accent-blue: #016eda;
+  --accent-blue-hover: #1c74dc;
+  --accent-dark-blue: #0d0e21;
+}
+
+* {
+  font-family: "Fixel", system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--darkest);
+  color: var(--lightest);
+}
+
+main,
+nav {
+  margin: auto;
+  width: 800px;
+  max-width: calc(100% - 2rem);
+  color: var(--lightest);
+  font-size: 20px;
+  line-height: 1.6;
+  padding: 1rem;
+}
+nav {
+  padding-bottom: 0;
+}
+
+code {
+  font-family: Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Liberation Mono, Courier New, monospace;
+  line-height: 1.625;
+  font-weight: 450;
+}
+
+input,
+button,
+select,
+textarea {
+  padding: 1em;
+  font-size: 0.9em;
+  border: 2px solid var(--lighter);
+  color: var(--lightest);
+  background: var(--mid);
+  border-radius: 0.25em;
+}
+select {
+  padding: 1em 0.5em;
+}
+textarea {
+  resize: vertical;
+  width: 100%;
+  white-space: preserve nowrap;
+}
+
+ul:not(.list) {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Links and nav */
+a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+a:visited {
+  color: var(--accent-purple);
+}
+nav a:visited {
+  color: var(--accent-blue);
+}
+a:hover,
+nav a:hover {
+  color: var(--accent-blue-hover);
+  text-underline-offset: 0.1em;
+}
+a:hover {
+  text-decoration: underline dotted;
+}
+nav a:hover {
+  text-decoration: underline;
+}
+
+nav {
+  font-size: 1.5em;
+  display: flex;
+  justify-content: space-between;
+}
+nav ul {
+  display: flex;
+  gap: 1em;
+}
+
+/* Buttons */
+
+button {
+  cursor: pointer;
+}
+
+button.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5em;
+  border-style: dotted;
+  border-top: none;
+  border-right: none;
+}
+
+button#submit {
+  display: block;
+  font-size: 1.5em;
+  margin: auto;
+  padding: 1em 2em;
+
+  color: #dcdcdc;
+  border: 2px double transparent;
+  background-image: linear-gradient(
+      var(--accent-dark-blue),
+      var(--accent-dark-blue)
+    ),
+    radial-gradient(
+      circle at left top,
+      var(--accent-purple),
+      var(--accent-blue)
+    );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+button#submit:hover {
+  box-shadow: var(--accent-purple-hover) 0px 0px 10px 0px;
+}
+
+button#submit:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}

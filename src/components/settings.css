@@ -1,0 +1,8 @@
+.settings {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 2em;
+  row-gap: 0.5em;
+  align-items: center;
+  margin-bottom: 2em;
+}

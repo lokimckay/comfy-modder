@@ -1,0 +1,33 @@
+.replacements {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.replacements > li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 1fr 0.25fr;
+  grid-template-rows: auto 1fr;
+  grid-auto-flow: column;
+  column-gap: 0.5em;
+  margin-bottom: 1em;
+  align-items: stretch;
+}
+
+.replacements > li label {
+  font-size: 0.8em;
+}
+
+.replacements > li input,
+.replacements > li select {
+  width: 100%;
+}
+
+.replacements button.delete {
+  grid-row: 2;
+}
+
+.replacements > li div {
+  display: contents;
+}

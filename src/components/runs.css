@@ -1,0 +1,45 @@
+.runs h2 {
+  display: inline-block;
+}
+
+.runs h2 + button {
+  margin-left: 1em;
+}
+
+.runs > ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-gap: 0.5em;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 2em;
+}
+
+.runs > ul > li {
+  position: relative;
+  border: 2px dotted var(--lighter);
+  padding: 1em;
+  border-radius: 0.25em;
+}
+
+.runs > ul > li h3 {
+  margin: 0;
+}
+
+.runs > ul > li .outputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-gap: 0.5em;
+  margin-top: 1em;
+}
+
+.runs > ul > li .outputs > li img {
+  max-width: 100%;
+  border-radius: 0.25em;
+  cursor: pointer;
+}
+
+textarea#bulkedit {
+  margin-bottom: 1em;
+}

@@ -1,0 +1,31 @@
+---
+import "@/styles/main.css";
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <title>{title}</title>
+  </head>
+  <body class="dark">
+    <nav>
+      <ul>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/settings">Settings</a>
+      </ul>
+      <ul>
+        <a href="https://github.com/lokimckay/comfy-modder">Github</a>
+      </ul>
+    </nav>
+    <slot />
+  </body>
+</html>

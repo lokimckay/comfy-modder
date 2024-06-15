@@ -1,0 +1,9 @@
+textarea#terminal {
+  white-space: preserve nowrap;
+  font-family: Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Liberation Mono, Courier New, monospace;
+  font-weight: 450;
+}
+.empty {
+  display: none;
+}

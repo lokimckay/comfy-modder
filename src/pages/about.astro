@@ -1,0 +1,44 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="About">
+  <main>
+    <h1>About</h1>
+    <p>
+      ComfyUI Modder allows you to easily replace any string inputs in your
+      ComfyUI workflows.
+    </p>
+    <p>
+      It's similar to an XY Plot, but allowing you to change many inputs at
+      once, and in arbitrary combinations.
+    </p>
+    <h2>Usage</h2>
+    <ol>
+      <li>
+        Install <a href="https://github.com/comfyanonymous/ComfyUI">ComfyUI</a>
+      </li>
+      <li>
+        Add <code>--enable-cors-header *</code> to the commandline options of <code
+          >run_nvidia_gpu.bat</code
+        >
+      </li>
+      <li>Start ComfyUI by running <code>run_nvidia_gpu.bat</code></li>
+      <li>Create a workflow that generates an image</li>
+      <li>Enable devtools in the ComfyUI settings menu</li>
+      <li>Save the workflow in API format</li>
+      <li>Copy and paste the API formatted workflow into comfy modder</li>
+      <li>
+        Configure replacements that you would like to change in your workflow
+      </li>
+      <li>Click generate</li>
+    </ol>
+    <h2>Tips 💡</h2>
+    <ul class="list">
+      <li>
+        Images are not saved to disk automatically unless your workflow does so.
+        Make sure to download generations before refreshing the page.
+      </li>
+    </ul>
+  </main>
+</Layout>

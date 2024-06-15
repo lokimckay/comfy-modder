@@ -1,0 +1,24 @@
+---
+import Workflow from "@/components/workflow";
+import Runs from "@/components/runs";
+import Layout from "@/layouts/Layout.astro";
+import Terminal from "@/components/terminal";
+import "@/styles/main.css";
+---
+
+<Layout title="Home">
+  <main>
+    <Workflow client:visible />
+
+    <Runs client:visible />
+    <button id="submit">Generate</button>
+
+    <Terminal client:visible />
+  </main>
+</Layout>
+
+<script>
+  import { generate } from "@/lib/main";
+  const button = document.querySelector("button#submit");
+  button!.addEventListener("click", generate);
+</script>
