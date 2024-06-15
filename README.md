@@ -17,7 +17,8 @@ Easily replace any string inputs in your ComfyUI workflows
 
 ## Roadmap
 
-- [ ] generation feedback (progress bars on runs)
+- [ ] Deploy
+- [ ] stop reflow issues (put progress bar where outputs go and reflow when generate clicked)
 - [ ] bigger value field if its a prompt
 - [ ] prompt S/R instead of full replace
 - [ ] append / prepend to value instead of full replace

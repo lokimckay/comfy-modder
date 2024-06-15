@@ -29,5 +29,5 @@ export const logger = pino({
       $logEntries.set([...$logEntries.get(), logEntry as LogEntry]);
     },
   },
-  level: "info",
+  level: "debug",
 });

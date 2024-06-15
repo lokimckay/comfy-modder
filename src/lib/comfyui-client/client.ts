@@ -332,13 +332,21 @@ export class ComfyUIClient {
   //   }
   // }
 
-  async getImages(prompt: Prompt): Promise<ImagesResponse> {
+  async getImages(
+    prompt: Prompt,
+    hooks: {
+      onStart?: (promptId: string) => void;
+      onProgress?: (promptId: string, nodeId: string, progress: number) => void;
+      onComplete?: (promptId: string) => void;
+    }
+  ): Promise<ImagesResponse> {
     if (!this.ws) {
       throw new Error(
         "WebSocket client is not connected. Please call connect() before interacting."
       );
     }
 
+    const { onStart, onProgress, onComplete } = hooks;
     const queue = await this.queuePrompt(prompt);
     const promptId = queue.prompt_id;
 
@@ -354,49 +362,82 @@ export class ComfyUIClient {
 
         try {
           const message = JSON.parse(data.toString());
-          if (message.type === "executing") {
-            const messageData = message.data;
-            if (!messageData.node) {
-              const donePromptId = messageData.prompt_id;
+          const messageData = message.data;
+          const msgPromptId = messageData.prompt_id;
 
-              logger.info(`Done executing prompt (ID: ${donePromptId})`);
-
-              // Execution is done
-              if (messageData.prompt_id === promptId) {
-                // Get history
-                const historyRes = await this.getHistory(promptId);
-                const history = historyRes[promptId];
-
-                // Populate output images
-                for (const nodeId of Object.keys(history.outputs)) {
-                  const nodeOutput = history.outputs[nodeId];
-                  if (nodeOutput.images) {
-                    const imagesOutput: ImageContainer[] = [];
-                    for (const image of nodeOutput.images) {
-                      const blob = await this.getImage(
-                        image.filename,
-                        image.subfolder,
-                        image.type
-                      );
-                      imagesOutput.push({
-                        blob,
-                        image,
-                      });
-                    }
-
-                    outputImages[nodeId] = imagesOutput;
-                  }
-                }
-
-                // Remove listener
-                this.ws?.removeEventListener("message", onMessage);
-                return resolve(outputImages);
-              } else {
-                reject(new Error("Prompt ID mismatch"));
+          switch (message.type) {
+            case "execution_start":
+              if (typeof onStart === "function") onStart(msgPromptId);
+              break;
+            case "execution_cached":
+              const nodes = messageData.nodes;
+              if (Array.isArray(nodes)) {
+                nodes.forEach((nodeId) => {
+                  if (typeof onProgress === "function")
+                    onProgress(msgPromptId, nodeId, 1);
+                });
               }
-            }
+              break;
+            case "progress":
+              const { node, value, max } = messageData;
+              if (!node || !value || !max) break;
+              const nodeId = messageData.node;
+              const progress = messageData.value / messageData.max;
+              if (typeof onProgress === "function")
+                onProgress(msgPromptId, nodeId, progress);
+              break;
+            case "executing":
+              if (messageData.node) {
+                const nodeId = messageData.node;
+                if (typeof onProgress === "function")
+                  onProgress(msgPromptId, nodeId, 1);
+              } else {
+                logger.info(`Done executing prompt (ID: ${msgPromptId})`);
+                if (typeof onComplete === "function") onComplete(msgPromptId);
+
+                if (msgPromptId === promptId) {
+                  // Get history
+                  const historyRes = await this.getHistory(promptId);
+                  const history = historyRes[promptId];
+                  if (!history) return reject(new Error("No history found"));
+
+                  // Populate output images
+                  for (const nodeId of Object.keys(history.outputs)) {
+                    const nodeOutput = history.outputs[nodeId];
+                    if (nodeOutput.images) {
+                      const imagesOutput: ImageContainer[] = [];
+                      for (const image of nodeOutput.images) {
+                        const blob = await this.getImage(
+                          image.filename,
+                          image.subfolder,
+                          image.type
+                        );
+                        imagesOutput.push({
+                          blob,
+                          image,
+                        });
+                      }
+
+                      outputImages[nodeId] = imagesOutput;
+                    }
+                  }
+
+                  // Remove listener
+                  this.ws?.removeEventListener("message", onMessage);
+                  return resolve(outputImages);
+                } else {
+                  logger.error(
+                    `Received prompt ID ${msgPromptId} but expected ${promptId}`
+                  );
+                  return reject(new Error("Received unexpected prompt ID"));
+                }
+              }
+              break;
+            default:
+              break;
           }
         } catch (err) {
+          logger.error(err);
           return reject(err);
         }
       };

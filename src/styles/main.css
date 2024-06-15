@@ -65,6 +65,25 @@ textarea {
   resize: vertical;
   width: 100%;
   white-space: preserve nowrap;
+  min-height: 200px;
+}
+textarea::-webkit-scrollbar {
+  width: 18px;
+}
+textarea::-webkit-scrollbar-track {
+  background: var(--mid);
+}
+textarea::-webkit-scrollbar-thumb {
+  background: var(--lighter);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 0.25em;
+}
+textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+  cursor: auto;
+}
+textarea::-webkit-resizer {
+  background: var(--lighter);
 }
 
 ul:not(.list) {
@@ -107,7 +126,6 @@ nav ul {
 }
 
 /* Buttons */
-
 button {
   cursor: pointer;
 }
@@ -152,4 +170,21 @@ button#submit:hover {
 button#submit:active {
   transform: scale(0.98);
   box-shadow: none;
+}
+
+/* Progress bar */
+.progress-bar {
+  width: 100%;
+  background-color: var(--mid);
+  padding: 0.5em;
+  border-radius: 0.25em;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.progress-bar-fill {
+  display: block;
+  background-color: var(--accent-blue);
+  border-radius: 0.25em;
+  transition: width 500ms ease-in-out;
 }

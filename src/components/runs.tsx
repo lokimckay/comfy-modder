@@ -4,6 +4,7 @@ import { useEffect } from "preact/hooks";
 import { useStore } from "@nanostores/preact";
 import { createId } from "@paralleldrive/cuid2";
 import Replacements from "./replacements";
+import { $progress, $running, $runs } from "@/lib/store/progress";
 import "./runs.css";
 
 export type Replacement = {
@@ -23,6 +24,9 @@ const runs: Signal<Run[]> = signal([]);
 export default function Runs() {
   const count = runs.value.length > 0 ? ` (${runs.value.length})` : "";
   const bulkEdit = useStore($bulkEditStr);
+  const progress = useStore($progress);
+  const running = useStore($running);
+  const runProgress = useStore($runs);
 
   useEffect(() => {
     const saved = localStorage.getItem("bulkEdit");
@@ -47,26 +51,39 @@ export default function Runs() {
       <p>Add runs or paste into the bulk edit area</p>
 
       <ul>
-        {runs.value.map(({ id: runId, replacements }, idx) => (
-          <li data-id={runId}>
-            <h3>Run #{idx + 1}</h3>
-            <Replacements
-              replacements={replacements}
-              add={(id) => addReplacement(runId, id)}
-              update={(id, data) => updateReplacement(runId, id, data)}
-              remove={(id) => removeReplacement(runId, id)}
-            />
-            <button class="close" onClick={() => removeRun(runId)}>
-              ❌
-            </button>
-          </li>
-        ))}
+        {runs.value.map(({ id: runId, replacements }, idx) => {
+          const runProg =
+            (runProgress.find((r) => r.id === runId)?.progress || 0) * 100;
+          return (
+            <li data-id={runId}>
+              <h3>Run #{idx + 1}</h3>
+              <Replacements
+                replacements={replacements}
+                add={(id) => addReplacement(runId, id)}
+                update={(id, data) => updateReplacement(runId, id, data)}
+                remove={(id) => removeReplacement(runId, id)}
+              />
+              {running && (
+                <div class="progress-bar">
+                  <span class="progress-bar-fill" style={`width: ${runProg}%;`}>
+                    {Math.round(runProg)}%
+                  </span>
+                </div>
+              )}
+              <button class="close" onClick={() => removeRun(runId)}>
+                ❌
+              </button>
+            </li>
+          );
+        })}
       </ul>
 
       <h3>Bulk edit</h3>
       <textarea id="bulkedit" rows={5} onInput={onBulkEditInput}>
         {bulkEdit}
       </textarea>
+
+      <button id="submit">Generate</button>
     </div>
   );
 }
