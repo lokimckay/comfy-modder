@@ -33,6 +33,10 @@
   min-height: 4em;
 }
 
+.replacements + button.add {
+  margin-bottom: 1em;
+}
+
 .replacements button.delete {
   grid-row: 2;
 }

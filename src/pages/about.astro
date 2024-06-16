@@ -5,13 +5,29 @@ import Layout from "@/layouts/Layout.astro";
 <Layout title="About">
   <main>
     <h1>About</h1>
+    <p>Comfy Modder allows you to replace inputs in your ComfyUI workflows.</p>
+    <ul class="list">
+      <li>Free</li>
+      <li>Open source</li>
+      <li>Runs in your browser</li>
+      <li>Interacts with your local ComfyUI process via websocket</li>
+    </ul>
+    <h2>Example use case</h2>
     <p>
-      ComfyUI Modder allows you to easily replace any string inputs in your
-      ComfyUI workflows.
+      Imagine you want to generate images of a landscape at different times of
+      day using both prompt variation and various LORAs.
+    </p>
+    <pre><code>{`| prompt    | LORAs                           |
+| --------- | ------------------------------- |
+| sunrise   | Darkness wt: 0; Sunshafts wt: 1 |
+| midnight  | Darkness wt: 1; Sunshafts wt: 0 |`}</code></pre>
+    <p>
+      Using an XYZ Plot that iterates over each input would generate extra
+      images that you don't want, such as <code>sunrise + Darkness wt: 1</code>
     </p>
     <p>
-      It's similar to an XY Plot, but allowing you to change many inputs at
-      once, and in arbitrary combinations.
+      Comfy Modder addresses this use case by enabling generation of only the
+      desired inputs.
     </p>
     <h2>Usage</h2>
     <ol>

@@ -80,7 +80,9 @@ export default function Replacements({
           </li>
         ))}
       </ul>
-      <button onClick={() => add(defaultReplacement())}>➕</button>
+      <button class="add" onClick={() => add(defaultReplacement())}>
+        ➕
+      </button>
     </>
   );
 }

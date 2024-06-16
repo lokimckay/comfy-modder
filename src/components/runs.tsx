@@ -4,7 +4,7 @@ import { useEffect } from "preact/hooks";
 import { useStore } from "@nanostores/preact";
 import { createId } from "@paralleldrive/cuid2";
 import Replacements from "./replacements";
-import { $progress, $running, $runs } from "@/lib/store/progress";
+import { $running, $runs } from "@/lib/store/progress";
 import "./runs.css";
 
 export type Replacement = {
@@ -24,7 +24,6 @@ const runs: Signal<Run[]> = signal([]);
 export default function Runs() {
   const count = runs.value.length > 0 ? ` (${runs.value.length})` : "";
   const bulkEdit = useStore($bulkEditStr);
-  const progress = useStore($progress);
   const running = useStore($running);
   const runProgress = useStore($runs);
 
@@ -44,7 +43,7 @@ export default function Runs() {
   }
 
   return (
-    <div class="runs">
+    <div class="runs" data-running={running}>
       <h2>Runs{count}</h2>
       <button onClick={() => addRun(defaultRun())}>➕</button>
 
@@ -52,10 +51,11 @@ export default function Runs() {
 
       <ul>
         {runs.value.map(({ id: runId, replacements }, idx) => {
-          const runProg =
-            (runProgress.find((r) => r.id === runId)?.progress || 0) * 100;
+          const runProgData = runProgress.find((r) => r.id === runId);
+          const { progress, running: runGoing } = runProgData || {};
+          const runProg = (progress || 0) * 100;
           return (
-            <li data-id={runId}>
+            <li data-id={runId} data-running={runGoing}>
               <h3>Run #{idx + 1}</h3>
               <Replacements
                 replacements={replacements}
@@ -63,13 +63,16 @@ export default function Runs() {
                 update={(id, data) => updateReplacement(runId, id, data)}
                 remove={(id) => removeReplacement(runId, id)}
               />
-              {running && (
-                <div class="progress-bar">
-                  <span class="progress-bar-fill" style={`width: ${runProg}%;`}>
-                    {Math.round(runProg)}%
-                  </span>
+              <div class="outputs">
+                <div
+                  class="progress-bar"
+                  data-visible={running && runProg !== 100}
+                  data-ease={runGoing}
+                  style={`--progress: ${runProg}%`}
+                >
+                  <span class="progress-bar-fill">{Math.round(runProg)}%</span>
                 </div>
-              )}
+              </div>
               <button class="close" onClick={() => removeRun(runId)}>
                 ❌
               </button>

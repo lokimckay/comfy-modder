@@ -1,6 +1,6 @@
 # Comfy Modder
 
-Easily replace any string inputs in your ComfyUI workflows
+Replace inputs in your ComfyUI workflows
 
 ## Usage
 
@@ -17,8 +17,9 @@ Easily replace any string inputs in your ComfyUI workflows
 
 ## Roadmap
 
-- [ ] stop reflow issues (put progress bar where outputs go and reflow when generate clicked)
-- [ ] bigger value field if its a prompt
+- [ ] other than strings
+- [ ] presets
 - [ ] prompt S/R instead of full replace
 - [ ] append / prepend to value instead of full replace
 - [ ] Loglevel setting
+- [ ] Reset button for replace with field that resets to workflow value

@@ -34,7 +34,7 @@ export default function Workflow() {
       <textarea
         id="workflow"
         rows={10}
-        spellCheck={false}
+        spellcheck={false}
         placeholder="Paste workflow_api.json here"
         onInput={(e) =>
           (workflow.value = (e.target as HTMLTextAreaElement).value)

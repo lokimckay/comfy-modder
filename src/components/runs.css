@@ -9,7 +9,7 @@
 .runs > ul {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: 1fr;
   grid-gap: 0.5em;
   padding: 0;
   margin: 0;
@@ -27,14 +27,23 @@
   margin: 0;
 }
 
-.runs > ul > li .outputs {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  grid-gap: 0.5em;
-  margin-top: 1em;
+.runs .outputs {
+  position: relative;
 }
 
-.runs > ul > li .outputs > li img {
+.runs[data-running="true"] .outputs {
+  min-height: 5em;
+}
+
+.runs .outputs > ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 5em);
+  justify-content: start;
+  gap: 0.5em;
+}
+
+.runs .outputs > ul > li img {
+  display: block;
   max-width: 100%;
   border-radius: 0.25em;
   cursor: pointer;
@@ -42,4 +51,21 @@
 
 textarea#bulkedit {
   margin-bottom: 1em;
+}
+
+.runs .progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 64px;
+  opacity: 0.8;
+  transition: opacity 0.5s;
+}
+
+.runs .progress-bar:not([data-visible="true"]) {
+  opacity: 0;
+}
+
+.runs > ul > li[data-running="true"] .progress-bar {
+  transition: opacity 0.5s;
 }

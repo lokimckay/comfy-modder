@@ -75,6 +75,7 @@ export async function generate() {
           return run.id === runId
             ? {
                 ...run,
+                running: true,
                 nodes: _nodes.map((node) =>
                   node.id === nodeId ? { ...node, progress } : node
                 ),
@@ -117,9 +118,12 @@ export async function generate() {
           logger.error(`Block ${runId} not found`);
           continue;
         }
-        const foundUl = document.querySelector(`[data-id="${runId}"] .outputs`);
+        const outputsArea = document.querySelector(
+          `[data-id="${runId}"] .outputs`
+        );
+
+        const foundUl = outputsArea?.querySelector("ul");
         const ul = foundUl || document.createElement("ul");
-        ul.classList.add("outputs");
         const li = document.createElement("li");
         const img = document.createElement("img");
         const a = document.createElement("a");
@@ -130,7 +134,7 @@ export async function generate() {
         a.appendChild(img);
         li.appendChild(a);
         ul.appendChild(li);
-        if (!foundUl) block.appendChild(ul);
+        if (outputsArea && !foundUl) outputsArea.appendChild(ul);
       }
     }
     logger.debug(`Appended images from run: ${runId}`);
