@@ -2,5 +2,6 @@ textarea#terminal {
   white-space: preserve nowrap;
   font-family: Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco,
     Liberation Mono, Courier New, monospace;
+  font-size: 0.8em;
   font-weight: 450;
 }

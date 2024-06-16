@@ -1,19 +1,18 @@
 import type { HTMLAttributes } from "preact/compat";
 
-export type SelectorOption = {
+type SelectorOption = {
   value: string;
   label: string;
 };
 
 interface Props extends HTMLAttributes<HTMLDataListElement> {
   id: string;
-  hint?: string;
   options: SelectorOption[];
   onChange: (e: Event) => void;
 }
 
 export default function Selector(props: Props) {
-  const { id, hint, options, label, onChange, value, ...rest } = props;
+  const { id, options, label, onChange, value, ...rest } = props;
 
   return (
     <div class="selector">

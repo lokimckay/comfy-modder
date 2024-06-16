@@ -6,3 +6,8 @@
   align-items: center;
   margin-bottom: 2em;
 }
+
+.settings > .input,
+.settings > .enum {
+  display: contents;
+}

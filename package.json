@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/check": "^0.7.0",
     "@astrojs/preact": "^3.4.0",
+    "@nanostores/persistent": "^0.10.1",
     "@nanostores/preact": "^0.5.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "astro": "^4.10.2",

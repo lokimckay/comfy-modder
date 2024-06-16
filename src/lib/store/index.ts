@@ -1,17 +1,24 @@
-import { atom, computed, map } from "nanostores";
-import type { SelectorOption } from "@/components/selector";
+import { atom, computed } from "nanostores";
+import { persistentMap } from "@nanostores/persistent";
 import type { NodeInfo } from "../comfyui-client";
 import type { Node } from "@/components/workflow";
 import type { Run } from "@/components/runs";
 import { createId } from "@paralleldrive/cuid2";
+import { logger } from "../logger";
 
 export const DEFAULT_SERVER_ADDRESS = "127.0.0.1:8188";
 
 export const $workflowStr = atom<string>("");
 export const $bulkEditStr = atom<string>("");
 export const $runs = atom<Run[]>([]);
-export const settings = map({
+export const settings = persistentMap("settings:", {
   serverAddress: DEFAULT_SERVER_ADDRESS,
+  logLevel: "info",
+});
+
+settings.subscribe(({ logLevel }) => {
+  console.log("Setting log level to: ", logLevel);
+  logger.level = logLevel;
 });
 
 export function setWorkflowStr(str: string) {
@@ -32,6 +39,10 @@ export const $nodes = computed($workflowStr, (wf) => parseWorkflow(wf));
 export const $nodeOptions = computed($nodes, (nodes) =>
   nodes.map(({ id, title }) => ({ value: id, label: `#${id} ${title}` }))
 );
+
+export function nodeIdToTitle(nodeId: string) {
+  return $nodes.get().find((node) => node.id === nodeId)?.title || "";
+}
 
 function parseWorkflow(workflow: string): Node[] {
   const allowedTypes = ["string", "number", "boolean"];

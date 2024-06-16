@@ -7,7 +7,7 @@ export default function Terminal() {
   return (
     <>
       <h2>Logs</h2>
-      <textarea id="terminal" rows={10} readOnly={true}>
+      <textarea id="terminal" rows={20} readOnly={true}>
         {logs.join("\n")}
       </textarea>
     </>

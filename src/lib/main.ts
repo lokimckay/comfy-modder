@@ -4,6 +4,7 @@ import {
   $bulkEditStr,
   $workflowStr,
   settings,
+  nodeIdToTitle,
 } from "@/lib/store";
 import { ComfyUIClient, type Prompt } from "@/lib/comfyui-client";
 import { createId } from "@paralleldrive/cuid2";
@@ -14,6 +15,7 @@ const CLIENT_ID = createId();
 
 export async function generate() {
   $logEntries.set([]);
+  logger.level = settings.get().logLevel;
   const args = getArgs();
   logger.info("Calling ComfyUI with args: ", JSON.stringify(args));
   const { workflow, serverAddress, runs } = args;
@@ -36,7 +38,9 @@ export async function generate() {
     const replacedWorkflow = structuredClone(workflow);
     for (const { nodeId, input, value } of replacements) {
       if (!nodeId || !input || !value) continue;
-      logger.info(`Replacing #${nodeId}.${input} with '${value}'`);
+      logger.info(
+        `Replacing #${nodeId} ${nodeIdToTitle(nodeId)}.${input} with '${value}'`
+      );
       try {
         replacedWorkflow[nodeId].inputs[input] = value;
       } catch (e) {
@@ -68,7 +72,6 @@ export async function generate() {
       nodeId: string,
       progress: number
     ) => {
-      logger.debug(`Run progressed - node: ${nodeId}: ${progress}`);
       $runsProgress.set(
         $runsProgress.get().map((run) => {
           const _nodes = run.nodes.length === 0 ? nodes : run.nodes;
