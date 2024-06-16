@@ -10,7 +10,7 @@ Easily replace any string inputs in your ComfyUI workflows
 1. Create a workflow that generates an image
 1. Enable devtools in the ComfyUI settings menu
 1. Save the workflow in API format
-1. Open [lokimckay.com/comfy-modder](https://lokimckay.com/comfy-modder)
+1. Open [lokimckay.github.io/comfy-modder/](https://lokimckay.github.io/comfy-modder/)
 1. Copy and paste the API formatted workflow into comfy modder
 1. Configure replacements and settings in comfy modder
 1. Click generate
@@ -22,3 +22,4 @@ Easily replace any string inputs in your ComfyUI workflows
 - [ ] bigger value field if its a prompt
 - [ ] prompt S/R instead of full replace
 - [ ] append / prepend to value instead of full replace
+- [ ] Loglevel setting
