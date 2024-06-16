@@ -88,10 +88,12 @@ export default function Runs() {
       </ul>
 
       <h3>Bulk edit</h3>
-      <textarea id="bulkedit" rows={5} onInput={onBulkEditInput}>
-        {bulkEdit}
-      </textarea>
-
+      <textarea
+        id="bulkedit"
+        value={bulkEdit}
+        rows={5}
+        onInput={onBulkEditInput}
+      />
       <button id="submit">Generate</button>
     </div>
   );

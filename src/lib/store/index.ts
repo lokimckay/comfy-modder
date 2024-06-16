@@ -17,7 +17,6 @@ export const settings = persistentMap("settings:", {
 });
 
 settings.subscribe(({ logLevel }) => {
-  console.log("Setting log level to: ", logLevel);
   logger.level = logLevel;
 });
 
