@@ -51,7 +51,7 @@ export class ComfyUIClient {
       });
 
       this.ws.addEventListener("error", (err) => {
-        logger.error({ err }, "WebSocket error");
+        logger.error({ err }, "WebSocket error. Is ComfyUI running?");
       });
 
       this.ws.addEventListener("message", ({ data }) => {

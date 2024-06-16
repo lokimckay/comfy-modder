@@ -1,27 +1,53 @@
-import { atom, map } from "nanostores";
+import { atom, computed, map } from "nanostores";
 import type { SelectorOption } from "@/components/selector";
+import type { NodeInfo } from "../comfyui-client";
 import type { Node } from "@/components/workflow";
 import type { Run } from "@/components/runs";
 import { createId } from "@paralleldrive/cuid2";
 
 export const DEFAULT_SERVER_ADDRESS = "127.0.0.1:8188";
 
-export const $nodes = atom<Node[]>([]);
-export const $nodeOptions = atom<SelectorOption[]>([]);
 export const $workflowStr = atom<string>("");
 export const $bulkEditStr = atom<string>("");
+export const $runs = atom<Run[]>([]);
 export const settings = map({
   serverAddress: DEFAULT_SERVER_ADDRESS,
 });
 
-export function setNodes(nodes: Node[]) {
-  const filtered = nodes.filter(
-    (node) => Object.values(node.inputs).length > 0
-  );
-  $nodes.set(filtered);
-  $nodeOptions.set(
-    filtered.map(({ id, title }) => ({ value: id, label: `#${id} ${title}` }))
-  );
+export function setWorkflowStr(str: string) {
+  $workflowStr.set(str);
+  localStorage.setItem("workflow", str);
+}
+
+export function setBulkEdit(newStr: string) {
+  $bulkEditStr.set(newStr);
+  localStorage.setItem("bulkEdit", newStr);
+}
+
+export function setRuns(runs: Run[]) {
+  $runs.set(runs);
+}
+
+export const $nodes = computed($workflowStr, (wf) => parseWorkflow(wf));
+export const $nodeOptions = computed($nodes, (nodes) =>
+  nodes.map(({ id, title }) => ({ value: id, label: `#${id} ${title}` }))
+);
+
+function parseWorkflow(workflow: string): Node[] {
+  const allowedTypes = ["string", "number", "boolean"];
+  const raw = JSON.parse(workflow);
+  return Object.entries(raw)
+    .map((entry) => {
+      const [id, info] = entry as [string, NodeInfo];
+      const { inputs: rawInputs, class_type, _meta } = info;
+      const title = _meta?.title || "";
+      const inputs = Object.entries(rawInputs).reduce((acc, [key, value]) => {
+        if (allowedTypes.includes(typeof value)) acc[key] = value;
+        return acc;
+      }, {} as Record<string, string>);
+      return { id, title, class_type, inputs };
+    })
+    .filter((node) => Object.values(node.inputs).length > 0);
 }
 
 export function getInputOptions(nodeId: string) {
@@ -55,7 +81,7 @@ export function serializeRuns(runs: Run[]): string {
 }
 
 export function deserializeRuns(str: string): Run[] {
-  const runs = str.split(/(---.*)\n/g).reduce((acc, idOrBody) => {
+  const runs = str.split(/(---.*)(:?\r\n|\r|\n)/g).reduce((acc, idOrBody) => {
     const isRunId = idOrBody.startsWith("---");
     if (isRunId)
       return [...acc, { id: idOrBody.replace("---", ""), replacements: [] }];
@@ -73,7 +99,7 @@ export function deserializeRuns(str: string): Run[] {
       };
       return replacement;
     });
-    lastEntry.replacements = replacements;
+    if (lastEntry) lastEntry.replacements = replacements;
     return acc;
   }, [] as Run[]);
   return runs;

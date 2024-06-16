@@ -3,11 +3,15 @@ import Workflow from "@/components/workflow";
 import Runs from "@/components/runs";
 import Layout from "@/layouts/Layout.astro";
 import Terminal from "@/components/terminal";
+import Demo from "@/components/demo";
 import "@/styles/main.css";
 ---
 
 <Layout title="Comfy Modder">
   <main>
+    <h1>Comfy Modder</h1>
+    <p>Replace inputs in your ComfyUI workflows</p>
+    <Demo client:visible />
     <Workflow client:visible />
     <Runs client:visible />
     <Terminal client:visible />

@@ -8,7 +8,7 @@ import {
 import { ComfyUIClient, type Prompt } from "@/lib/comfyui-client";
 import { createId } from "@paralleldrive/cuid2";
 import { $logEntries, logger } from "@/lib/logger";
-import { $running, $runs } from "./store/progress";
+import { $running, $runsProgress } from "./store/progress";
 
 const CLIENT_ID = createId();
 
@@ -21,7 +21,7 @@ export async function generate() {
   await client.connect();
 
   $running.set(true);
-  $runs.set(
+  $runsProgress.set(
     runs.map((run) => ({
       id: run.id,
       progress: 0,
@@ -54,8 +54,8 @@ export async function generate() {
 
     const onStart = (promptId: string) => {
       logger.info(`Started run: ${runId}`);
-      $runs.set(
-        $runs
+      $runsProgress.set(
+        $runsProgress
           .get()
           .map((run) =>
             run.id === runId ? { ...run, promptId, running: true, nodes } : run
@@ -69,8 +69,8 @@ export async function generate() {
       progress: number
     ) => {
       logger.debug(`Run progressed - node: ${nodeId}: ${progress}`);
-      $runs.set(
-        $runs.get().map((run) => {
+      $runsProgress.set(
+        $runsProgress.get().map((run) => {
           const _nodes = run.nodes.length === 0 ? nodes : run.nodes;
           return run.id === runId
             ? {
@@ -92,8 +92,8 @@ export async function generate() {
 
     const onComplete = (_promptId: string) => {
       logger.info(`Run complete: ${runId}`);
-      $runs.set(
-        $runs
+      $runsProgress.set(
+        $runsProgress
           .get()
           .map((run) =>
             run.id === runId ? { ...run, running: false, progress: 1 } : run

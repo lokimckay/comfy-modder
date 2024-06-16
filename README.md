@@ -17,8 +17,8 @@ Replace inputs in your ComfyUI workflows
 
 ## Roadmap
 
-- [ ] presets
 - [ ] prompt S/R instead of full replace
 - [ ] append / prepend to value instead of full replace
 - [ ] Loglevel setting
 - [ ] Reset button for `replace with` field that resets to workflow value
+- [ ] Invalid JSON feedback

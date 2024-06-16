@@ -14,8 +14,8 @@ type RunProgress = {
 };
 
 export const $running = atom(false);
-export const $runs = atom<RunProgress[]>([]);
-export const $progress = computed($runs, (runs) => {
+export const $runsProgress = atom<RunProgress[]>([]);
+export const $progress = computed($runsProgress, (runs) => {
   if (runs.length === 0) return 0;
   const total = runs.reduce((acc, run) => acc + run.progress, 0);
   return total / runs.length;

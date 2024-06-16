@@ -1,10 +1,16 @@
-import { serializeRuns, deserializeRuns, $bulkEditStr } from "@/lib/store";
-import { signal, type Signal } from "@preact/signals";
+import {
+  serializeRuns,
+  deserializeRuns,
+  $bulkEditStr,
+  setBulkEdit,
+  setRuns,
+} from "@/lib/store";
 import { useEffect } from "preact/hooks";
 import { useStore } from "@nanostores/preact";
 import { createId } from "@paralleldrive/cuid2";
 import Replacements from "./replacements";
-import { $running, $runs } from "@/lib/store/progress";
+import { $runs } from "@/lib/store";
+import { $running, $runsProgress } from "@/lib/store/progress";
 import "./runs.css";
 
 export type Replacement = {
@@ -19,27 +25,26 @@ export type Run = {
   replacements: Replacement[];
 };
 
-const runs: Signal<Run[]> = signal([]);
-
 export default function Runs() {
-  const count = runs.value.length > 0 ? ` (${runs.value.length})` : "";
+  const runs = useStore($runs);
+  const count = runs.length > 0 ? ` (${runs.length})` : "";
   const bulkEdit = useStore($bulkEditStr);
   const running = useStore($running);
-  const runProgress = useStore($runs);
+  const runProgress = useStore($runsProgress);
 
   useEffect(() => {
     const saved = localStorage.getItem("bulkEdit");
     if (saved) {
-      setBulkEdit(saved);
-      setRuns(deserializeRuns(saved));
+      $bulkEditStr.set(saved);
+      $runs.set(deserializeRuns(saved));
     }
   }, []);
 
   function onBulkEditInput(evt: Event) {
     const newStr = (evt.target as HTMLTextAreaElement).value;
     setBulkEdit(newStr);
-    const newImgs = deserializeRuns(newStr);
-    setRuns([...newImgs]);
+    const newRuns = deserializeRuns(newStr);
+    $runs.set(newRuns);
   }
 
   return (
@@ -50,7 +55,7 @@ export default function Runs() {
       <p>Add runs or paste into the bulk edit area</p>
 
       <ul>
-        {runs.value.map(({ id: runId, replacements }, idx) => {
+        {runs.map(({ id: runId, replacements }, idx) => {
           const runProgData = runProgress.find((r) => r.id === runId);
           const { progress, running: runGoing } = runProgData || {};
           const runProg = (progress || 0) * 100;
@@ -92,53 +97,50 @@ export default function Runs() {
 }
 
 // State
-function setRuns(newRuns: Run[]) {
-  runs.value = newRuns;
-  const serialized = serializeRuns(newRuns);
-  setBulkEdit(serialized);
-}
-
-function setBulkEdit(newStr: string) {
-  $bulkEditStr.set(newStr);
-  localStorage.setItem("bulkEdit", newStr);
-}
-
 const defaultRun = () => ({
   id: createId(),
   replacements: [{ id: createId(), nodeId: "", input: "", value: "" }],
 });
 
 function addRun(image: Run) {
-  setRuns([...runs.value, image]);
+  setRBE([...$runs.get(), image]);
 }
 
 function removeRun(id: string) {
-  setRuns(runs.value.filter((image) => id !== image.id));
+  setRBE($runs.get().filter((image) => id !== image.id));
 }
 
 function getRunById(id: string) {
-  return runs.value.find((image) => id === image.id);
+  return $runs.get().find((image) => id === image.id);
 }
 
 function addReplacement(runId: string, replacement: Replacement) {
-  const found = getRunById(runId);
-  if (!found) return console.error(`Run with id ${runId} not found`);
-  found.replacements = [...found.replacements, replacement];
-  setRuns([...runs.value]);
+  const changed = getRunById(runId);
+  if (!changed) return console.error(`Run with id ${runId} not found`);
+  changed.replacements = [...changed.replacements, replacement];
+  setRBE([...$runs.get().map((r) => (r.id === runId ? changed : r))]);
 }
 
 function updateReplacement(runId: string, id: string, data: any) {
-  const foundImg = getRunById(runId);
-  if (!foundImg) return console.error(`Run with id ${runId} not found`);
-  const foundData = foundImg.replacements.find((r) => r.id === id);
-  if (!foundData) return console.error(`Replacement with id ${id} not found`);
-  Object.assign(foundData, data);
-  setRuns([...runs.value]);
+  const changedRun = getRunById(runId);
+  if (!changedRun) return console.error(`Run with id ${runId} not found`);
+  const changedRepl = changedRun.replacements.find((r) => r.id === id);
+  if (!changedRepl) return console.error(`Replacement with id ${id} not found`);
+  Object.assign(changedRepl, data);
+  setRBE([...$runs.get().map((r) => (r.id === runId ? changedRun : r))]);
 }
 
 function removeReplacement(runId: string, replacementId: string) {
-  const found = getRunById(runId);
-  if (!found) return console.error(`Run with id ${runId} not found`);
-  found.replacements = found.replacements.filter((r) => replacementId !== r.id);
-  setRuns([...runs.value]);
+  const changed = getRunById(runId);
+  if (!changed) return console.error(`Run with id ${runId} not found`);
+  changed.replacements = changed.replacements.filter(
+    (r) => replacementId !== r.id
+  );
+  setRBE([...$runs.get().map((r) => (r.id === runId ? changed : r))]);
+}
+
+// Set both runs and bulk edit
+function setRBE(runs: Run[]) {
+  setRuns(runs);
+  setBulkEdit(serializeRuns(runs));
 }

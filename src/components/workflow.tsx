@@ -1,8 +1,7 @@
-import { signal, effect } from "@preact/signals";
-import type { Signal } from "@preact/signals";
+import { $workflowStr, setWorkflowStr } from "@/lib/store";
 import type { NodeInfo } from "@/lib/comfyui-client";
+import { useStore } from "@nanostores/preact";
 import { useEffect } from "preact/hooks";
-import { $workflowStr, setNodes } from "@/lib/store";
 import "./workflow.css";
 
 export interface Node extends NodeInfo {
@@ -10,21 +9,12 @@ export interface Node extends NodeInfo {
   title: string;
 }
 
-const workflow: Signal<string> = signal("");
-effect(() => {
-  $workflowStr.set(workflow.value);
-  const nodes = workflow.value ? parseWorkflow(workflow.value) : [];
-  setNodes(nodes);
-});
-
 export default function Workflow() {
-  useEffect(() => {
-    const saved = localStorage.getItem("workflow");
-    if (saved) workflow.value = saved;
+  const workflow = useStore($workflowStr);
 
-    effect(() => {
-      localStorage.setItem("workflow", workflow.value);
-    });
+  useEffect(() => {
+    const saved = localStorage.getItem("workflow") || "";
+    if (saved) $workflowStr.set(saved);
   }, []);
 
   return (
@@ -36,28 +26,9 @@ export default function Workflow() {
         rows={10}
         spellcheck={false}
         placeholder="Paste workflow_api.json here"
-        onInput={(e) =>
-          (workflow.value = (e.target as HTMLTextAreaElement).value)
-        }
+        onInput={(e) => setWorkflowStr((e.target as HTMLTextAreaElement).value)}
         value={workflow}
       />
     </>
   );
-}
-
-// State
-const allowedTypes = ["string", "number", "boolean"];
-
-function parseWorkflow(workflow: string): Node[] {
-  const raw = JSON.parse(workflow);
-  return Object.entries(raw).map((entry) => {
-    const [id, info] = entry as [string, NodeInfo];
-    const { inputs: rawInputs, class_type, _meta } = info;
-    const title = _meta?.title || "";
-    const inputs = Object.entries(rawInputs).reduce((acc, [key, value]) => {
-      if (allowedTypes.includes(typeof value)) acc[key] = value;
-      return acc;
-    }, {} as Record<string, string>);
-    return { id, title, class_type, inputs };
-  });
 }
