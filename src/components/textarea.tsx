@@ -1,5 +1,4 @@
 import type { HTMLAttributes } from "preact/compat";
-// import "./textarea.css";
 
 interface Props extends HTMLAttributes<HTMLTextAreaElement> {}
 
