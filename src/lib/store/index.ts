@@ -37,11 +37,12 @@ export function getDefaultValue(nodeId: string, input: string) {
 
 export function serializeRuns(runs: Run[]): string {
   let str = "";
+  const enc = encodeURIComponent;
   for (const { id, replacements } of runs) {
     if (replacements.length === 0) continue;
     str += `---${id}\n`;
     for (const { nodeId, input, value } of replacements) {
-      if (nodeId) str += `${nodeId},${input},${encodeURIComponent(value)}\n`;
+      if (nodeId) str += `${nodeId},${input},${enc(value)}\n`;
     }
   }
   return str;
@@ -49,8 +50,8 @@ export function serializeRuns(runs: Run[]): string {
 
 export function deserializeRuns(str: string): Run[] {
   const runs = str.split(/(---.*)\n/g).reduce((acc, idOrBody) => {
-    const isId = idOrBody.startsWith("---");
-    if (isId)
+    const isRunId = idOrBody.startsWith("---");
+    if (isRunId)
       return [...acc, { id: idOrBody.replace("---", ""), replacements: [] }];
 
     const lastEntry = acc[acc.length - 1];

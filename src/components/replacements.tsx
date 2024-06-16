@@ -31,10 +31,11 @@ export default function Replacements({
             <div class="header">
               <Selector
                 id="node"
-                label="Node"
+                label="Node ID"
                 value={nodeId}
                 onChange={(e) => {
-                  const newNodeId = (e.target as HTMLSelectElement).value;
+                  const t = e.target as HTMLSelectElement;
+                  const newNodeId = t.value;
                   update(id, { nodeId: newNodeId });
                   const inputOptions = getInputOptions(newNodeId);
                   if (inputOptions.length > 0) {
@@ -79,13 +80,15 @@ export default function Replacements({
           </li>
         ))}
       </ul>
-      <button
-        onClick={() =>
-          add({ id: createId(), nodeId: "", input: "", value: "" })
-        }
-      >
-        ➕
-      </button>
+      <button onClick={() => add(defaultReplacement())}>➕</button>
     </>
   );
 }
+
+const defaultReplacement = () => ({
+  id: createId(),
+  title: "",
+  nodeId: "",
+  input: "",
+  value: "",
+});

@@ -7,18 +7,21 @@ export type SelectorOption = {
 
 interface Props extends HTMLAttributes<HTMLDataListElement> {
   id: string;
+  hint?: string;
   options: SelectorOption[];
   onChange: (e: Event) => void;
 }
 
 export default function Selector(props: Props) {
-  const { id, options, label, onChange, value, ...rest } = props;
+  const { id, hint, options, label, onChange, value, ...rest } = props;
+
   return (
-    <div>
+    <div class="selector">
       <label for={id}>{label}</label>
       <input type="text" list={id} value={value} onChange={onChange} />
+
       <datalist id={id} {...rest}>
-        {props.options.map(({ value, label: optionLabel }) => (
+        {options.map(({ value, label: optionLabel }) => (
           <option value={value}>{optionLabel}</option>
         ))}
       </datalist>

@@ -7,7 +7,7 @@
 .replacements > li > .header {
   position: relative;
   display: grid;
-  grid-template-columns: 0.5fr 0.5fr auto;
+  grid-template-columns: 0.25fr 1fr min-content;
   grid-template-rows: auto 1fr;
   grid-auto-flow: column;
   column-gap: 0.5em;
@@ -37,6 +37,6 @@
   grid-row: 2;
 }
 
-.replacements > li > .header div {
+.replacements > li > .header > div {
   display: contents;
 }
