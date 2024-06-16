@@ -26,6 +26,10 @@ html {
   color: var(--lightest);
 }
 
+body {
+  padding-bottom: 10em;
+}
+
 main,
 nav {
   margin: auto;

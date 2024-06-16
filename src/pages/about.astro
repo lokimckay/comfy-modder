@@ -1,9 +1,10 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import "@/styles/about.css";
 ---
 
 <Layout title="About">
-  <main>
+  <main class="about">
     <h1>About</h1>
     <p>Comfy Modder allows you to replace inputs in your ComfyUI workflows.</p>
     <ul class="list">
@@ -54,6 +55,11 @@ import Layout from "@/layouts/Layout.astro";
       <li>
         Images are not saved to disk automatically unless your workflow does so.
         Make sure to download generations before refreshing the page.
+      </li>
+      <li>
+        Dropdown selector fields filter options based on the text entered - if
+        you aren't seeing an option you expect, delete the current text in the
+        field.
       </li>
     </ul>
   </main>
