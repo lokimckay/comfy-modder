@@ -46,6 +46,8 @@ export default function Workflow() {
 }
 
 // State
+const allowedTypes = ["string", "number", "boolean"];
+
 function parseWorkflow(workflow: string): Node[] {
   const raw = JSON.parse(workflow);
   return Object.entries(raw).map((entry) => {
@@ -53,7 +55,7 @@ function parseWorkflow(workflow: string): Node[] {
     const { inputs: rawInputs, class_type, _meta } = info;
     const title = _meta?.title || "";
     const inputs = Object.entries(rawInputs).reduce((acc, [key, value]) => {
-      if (typeof value === "string") acc[key] = value;
+      if (allowedTypes.includes(typeof value)) acc[key] = value;
       return acc;
     }, {} as Record<string, string>);
     return { id, title, class_type, inputs };

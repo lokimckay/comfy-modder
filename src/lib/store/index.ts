@@ -32,7 +32,13 @@ export function getInputOptions(nodeId: string) {
 }
 
 export function getDefaultValue(nodeId: string, input: string) {
-  return $nodes.get().find((node) => node.id === nodeId)?.inputs[input] || "";
+  const nodeInWorkflow = $nodes.get().find((node) => node.id === nodeId);
+  const wfInput = nodeInWorkflow?.inputs[input];
+  return typeof wfInput === "string"
+    ? wfInput || ""
+    : typeof wfInput?.toString === "function"
+    ? wfInput.toString()
+    : "";
 }
 
 export function serializeRuns(runs: Run[]): string {

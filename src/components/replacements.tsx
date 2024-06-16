@@ -30,7 +30,7 @@ export default function Replacements({
           <li>
             <div class="header">
               <Selector
-                id="node"
+                id={`${id}-node`}
                 label="Node ID"
                 value={nodeId}
                 onChange={(e) => {
@@ -50,7 +50,7 @@ export default function Replacements({
                 options={$nodeOptions.get()}
               />
               <Selector
-                id="input"
+                id={`${id}-input`}
                 label="Input"
                 value={input}
                 onChange={(e) => {
@@ -67,6 +67,7 @@ export default function Replacements({
             </div>
             <div>
               <TextArea
+                id={`${id}-value`}
                 type="text"
                 label="Replace with"
                 value={value}
