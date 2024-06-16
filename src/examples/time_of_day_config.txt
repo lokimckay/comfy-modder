@@ -1,4 +1,6 @@
 ---t1vl8roga2qo379cv7adrchr
-6,text,beautiful%20scenery%20nature%20glass%20bottle%20landscape%2C%20%2C%20green%20galaxy%20bottle%2C
+6,text,beautiful%20scenery%20nature%20glass%20bottle%20landscape%2C%20%2C%20green%20galaxy%20bottle%2C%0D
 ---foqq049yjgpwrz7tp59pw4bx
-6,text,beautiful%20scenery%20nature%20glass%20bottle%20landscape%2C%20%2C%20blue%20galaxy%20bottle%2C
+6,text,beautiful%20scenery%20nature%20glass%20bottle%20landscape%2C%20%2C%20blue%20galaxy%20bottle%2C%20dark%20background%2C%20dark%20theme%0A
+11,strength_model,0.25
+11,strength_clip,0.25

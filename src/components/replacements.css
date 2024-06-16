@@ -1,19 +1,28 @@
-.replacements {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.replacements > li > .header {
+.replacements > li.string > .header,
+.replacements > li.number {
   position: relative;
   display: grid;
-  grid-template-columns: 0.25fr 1fr min-content;
-  grid-template-rows: auto 1fr;
+  grid-template-columns: 0.25fr 1fr 0.5fr min-content;
   grid-auto-flow: column;
   column-gap: 0.5em;
   align-items: stretch;
 }
+.replacements > li.string > .header {
+  grid-template-columns: 0.25fr 1fr min-content;
+  grid-template-rows: auto 1fr;
+}
+.replacements > li.number {
+  grid-template-columns: 0.25fr 1fr 0.5fr min-content;
+}
+.replacements > li.number > .header,
+.replacements > li.number > .body {
+  display: contents;
+}
+.replacements > li.number button.delete {
+  grid-column: 4;
+}
 
+.replacements > li,
 .replacements > li > div {
   margin-bottom: 1em;
 }
@@ -41,6 +50,7 @@
   grid-row: 2;
 }
 
-.replacements > li > .header > div {
+.replacements > li > .header > div,
+.replacements > li.number > .body > div {
   display: contents;
 }

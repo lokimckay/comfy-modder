@@ -91,11 +91,14 @@ export function deserializeRuns(str: string): Run[] {
     if (lines.length === 0) return acc;
     const replacements = lines.map((line) => {
       const [nodeId = "", input = "", value = ""] = line.split(",");
+      const valueType = typeof $nodes.get().find((node) => node.id === nodeId)
+        ?.inputs[input];
       const replacement = {
         id: createId(),
         nodeId,
         input,
         value: decodeURIComponent(value),
+        valueType,
       };
       return replacement;
     });

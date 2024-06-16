@@ -8,7 +8,7 @@ import {
 import { useEffect } from "preact/hooks";
 import { useStore } from "@nanostores/preact";
 import { createId } from "@paralleldrive/cuid2";
-import Replacements from "./replacements";
+import Replacements, { defaultReplacement } from "./replacements";
 import { $runs } from "@/lib/store";
 import { $running, $runsProgress } from "@/lib/store/progress";
 import "./runs.css";
@@ -18,6 +18,7 @@ export type Replacement = {
   nodeId: string;
   input: string;
   value: string;
+  valueType: string;
 };
 
 export type Run = {
@@ -99,7 +100,7 @@ export default function Runs() {
 // State
 const defaultRun = () => ({
   id: createId(),
-  replacements: [{ id: createId(), nodeId: "", input: "", value: "" }],
+  replacements: [defaultReplacement()],
 });
 
 function addRun(image: Run) {
