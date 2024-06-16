@@ -97,7 +97,7 @@ export function deserializeRuns(str: string): Run[] {
         id: createId(),
         nodeId,
         input,
-        value: decodeURIComponent(value),
+        value: decodeURIComponent(value).replace(/^\s+|\s+$/g, ""),
         valueType,
       };
       return replacement;
